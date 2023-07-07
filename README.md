@@ -3,6 +3,7 @@
                             !!! BETA RELEASE - GIF IT !!!
 
 GIF IT - code by C1t1zen with CodeGPT in VSCode on Windows 10 - June 27 2023
+
 THIS IS A BETA RELEASE USE WITH CAUTION ALWAYS MAKE BACKUPS OF YOUR IMAGES FIRST 
 
                             !!!! BETA RELEASE - GIF IT !!!	
