@@ -66,7 +66,7 @@ def create_gif_from_images(images, output_folder, output_name, speed=100, dissol
     
     # Save images as GIF
     if not output_name:
-        output_name = os.path.basename(folder_path)
+        output_name = os.path.basename(output_folder)
     output_path = os.path.join(output_folder, output_name + '.gif')
     try:
         dissolved_images[0].save(output_path,
