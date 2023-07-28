@@ -28,7 +28,7 @@ Click on GIF_IT_v_023.exe and the interface will open:
 3. DISSOLVE IT: Choose how many frames you want to fade between each image. Alpha blend dissolve.
 4. SIZE: Scale GIF output down to 0.1 or up to 10 times original size
 5. COLORS: Limit colors from a max of 256 down to 1 color
-6. DITHER OPTIONS: There are a few diterh options that can be used for style and optimization they are ORDERED, RASTERIZE, FLOYDSTEINBERG, 8-BIT, or NONE. Leaving the setting on DITHER OPTIONS also = NONE.   
+6. DITHER OPTIONS: There are a few dither options that can be used for style and optimization they are ORDERED, RASTERIZE, FLOYDSTEINBERG, 8-BIT, or NONE. Leaving the setting on DITHER OPTIONS also = NONE.   
 7. Click on the GIF IT button to select the folder containing the number sequenced images you want to convert. A file dialog window will open, allowing you to navigate to the desired folder. Select the folder and click "OK". 
 
 OR
