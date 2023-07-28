@@ -4,15 +4,20 @@ import tkinter as tk
 from tkinter import filedialog, ttk
 from tkinterdnd2 import TkinterDnD
 
-# Function to create a GIF from a folder of images
-def create_gif_from_images(folder_path, output_folder, output_name, speed=100, dissolve=0, resample=1, colors=256):
-    images = []
+# Constants for file extensions and dithering methods
+FILE_EXTENSIONS = (".png", ".jpg", ".jpeg")
 
-    # Load images from the folder
+# Function to load images from a folder, resample them, limit the number of colors, and convert them to RGBA mode
+def load_images_from_folder(folder_path, resample, colors):
+    images = []
     for filename in sorted(os.listdir(folder_path)):
-        if filename.endswith(".png") or filename.endswith(".jpg") or filename.endswith(".jpeg"):
+        if filename.endswith(FILE_EXTENSIONS):
             image_path = os.path.join(folder_path, filename)
-            image = Image.open(image_path)
+            try:
+                image = Image.open(image_path)
+            except IOError:
+                print(f"Unable to open image file {image_path}. Skipping.")
+                continue
             if colors:
                 colors = int(colors)  # Convert the colors value to an integer
                 image = image.quantize(colors=colors)
@@ -27,46 +32,50 @@ def create_gif_from_images(folder_path, output_folder, output_name, speed=100, d
             # Convert image back to RGBA
             image = image.convert('RGBA')
             images.append(image)
+    return images
 
-            # Apply dithering based on the selected option
-            dither_method = dither_method_var.get()
-            if dither_method == 'DITHER OPTIONS':
-                images.append(image)
-            elif dither_method == 'NONE':
-                images.append(image)
-            elif dither_method == 'FLOYDSTEINBERG':
-                image = image.convert('P', dither=Image.FLOYDSTEINBERG)
-            elif dither_method == 'RATERIZE':
-                image = image.convert('P', dither=Image.RATERIZE)
-            elif dither_method == 'ORDERED':
-                image = image.convert('P', dither=Image.ORDERED)
-            elif dither_method == '8-BIT':
-                image = image.convert('P', dither=Image.NONE)
-
-            # Limit the number of colors
-            # image = image.quantize(colors=colors)
-            # Convert image back to RGBA
-            # image = image.convert('RGBA')
-            images.append(image)
-    
+# Function to create a GIF from a folder of images
+def create_gif_from_images(images, output_folder, output_name, speed=100, dissolve=0, resample=1, colors=256):
     # Add dissolve effect between each image
     dissolved_images = []
-    for i in range(len(images) - 1):
-        for j in range(dissolve):
-            alpha = j / dissolve
-            blend = Image.blend(images[i], images[i+1], alpha)
-            dissolved_images.append(blend)
-    dissolved_images.append(images[-1])
+    if dissolve == 0:
+        dissolved_images = images.copy()
+    else:
+        for i in range(len(images) - 1):
+            for j in range(dissolve):
+                alpha = j / dissolve
+                blend = Image.blend(images[i], images[i+1], alpha)
+                dissolved_images.append(blend)
+        dissolved_images.append(images[-1])
 
+    # Apply dithering based on the selected option       
+    dither_method = dither_method_var.get()
+    
+    if dither_method == 'DITHER OPTIONS':
+        dissolved_images.append(images[-1])
+    elif dither_method == 'NONE':
+        dissolved_images.append(images[-1])
+    elif dither_method == '8-BIT':
+        dissolved_images = [img.convert('P', dither=Image.NONE) for img in dissolved_images]
+    elif dither_method == 'ORDERED':
+        dissolved_images = [img.convert('P', dither=Image.ORDERED) for img in dissolved_images]
+    elif dither_method == 'RASTERIZE':
+        dissolved_images = [img.convert('P', dither=Image.RASTERIZE) for img in dissolved_images]
+    elif dither_method == 'FLOYDSTEINBERG':
+        dissolved_images = [img.convert('P', dither=Image.FLOYDSTEINBERG) for img in dissolved_images]
+    
     # Save images as GIF
     if not output_name:
         output_name = os.path.basename(folder_path)
     output_path = os.path.join(output_folder, output_name + '.gif')
-    dissolved_images[0].save(output_path,
-               save_all=True,
-               append_images=dissolved_images[1:],
-               duration=speed,
-               loop=0)
+    try:
+        dissolved_images[0].save(output_path,
+                   save_all=True,
+                   append_images=dissolved_images[1:],
+                   duration=speed,
+                   loop=0)
+    except IOError:
+        print(f"Unable to save GIF file {output_path}.")
 
 # Function to handle button click event
 def create_gif(folder_path=None):
@@ -94,10 +103,19 @@ def create_gif(folder_path=None):
                 progress_label.config(text="%.0f%%" % progress)
                 window.update_idletasks()
         output_folder = os.path.dirname(folder_path)
-        create_gif_from_images(folder_path, output_folder, output_name, gif_speed, dissolve, resample, colors)
+
+        # Progress bar reset
+        def reset_progress():
+            progress_bar['value'] = 0
+            progress_label.config(text="")
+
+        create_gif_from_images(images, output_folder, output_name, gif_speed, dissolve, resample, colors)
         status_label.config(text="Great Success!")
         progress_bar['value'] = 100
         progress_label.config(text="100%")
+
+        # Schedule reset_progress to run after 12000 milliseconds (12 seconds)
+        window.after(12000, reset_progress)
 
 # Function to handle drop event
 def drop(event):
@@ -110,8 +128,8 @@ def drop(event):
 window = TkinterDnD.Tk()
 window.iconbitmap('GIF_IT_ICON2.ico')
 window.resizable(width=False, height=False)
-window.geometry("+300+300")  # set position on the screen
-window.geometry("225x550")
+window.geometry("+400+200")  # set position on the screen
+window.geometry("225x510")
 window.configure(bg='powder blue')
 window.title("GIF IT")
 
@@ -124,7 +142,6 @@ image_label.configure(borderwidth=0, highlightthickness=0)
 image_label.pack(padx=5, pady=5)
 
 # Add a label and entry for output name
-# photo1 = tk.PhotoImage(file="NAME_IT.png")
 output_name_label = tk.Label(window, text="NAME IT", bg='powder blue', font=('TkDefaultFont', 9, 'bold'))
 output_name_label.pack(pady=2)
 output_name_entry = tk.Entry(window)
@@ -133,37 +150,7 @@ output_name_entry.config(justify="center", validate='all')
 output_name_entry.pack()
 output_name_entry.focus()
 
-# Create a style
-style = ttk.Style()
-style.configure("blue.Horizontal.TScale", foreground='#B0E0E6', background='#B0E0E6', troughcolor='#B0E0E6', slidercolor='#B0E0E6')
-
-# Function to update the label of a scale widgets
-def update_scale_label1(label, value):
-    label.config(text="{:.1f}".format(float(value)))
-
-def update_scale_label2(label, value):
-    label.config(text="{}".format(int(value)))
-
-# Add a label and slider for resample
-resample_label = tk.Label(window, text="SIZE IT", bg='powder blue', font=('TkDefaultFont', 9, 'bold'))
-resample_label.pack(pady=0)
-resample_value_label = tk.Label(window, text="1.0", bg='powder blue')
-resample_value_label.pack()
-resample_slider = ttk.Scale(window, from_=0.1, to=10, length=125, style="blue.Horizontal.TScale", command=lambda value: update_scale_label1(resample_value_label, value))  # Use the ttk.Scale widget1 with the custom style
-resample_slider.set(1)
-resample_slider.pack()
-
-# Add a label and slider for colors
-colors_label = tk.Label(window, text="COLOR IT", bg='powder blue', font=('TkDefaultFont', 9, 'bold'))
-colors_label.pack(pady=0)
-colors_value_label = tk.Label(window, text="256", bg='powder blue')
-colors_value_label.pack()
-colors_slider = ttk.Scale(window, from_=1, to=256, length=125, command=lambda value: update_scale_label2(colors_value_label, int(float(value))))
-colors_slider.set(256)
-colors_slider.pack()
-
 # Add a label and entry for gif speed
-# photo2 = tk.PhotoImage(file="TIME_IT.png")
 speed_label = tk.Label(window, text="TIME IT", bg='powder blue', font=('TkDefaultFont', 9, 'bold'))
 speed_label.pack(pady=2)
 speed_entry = tk.Entry(window)
@@ -179,19 +166,46 @@ dissolve_entry.insert(tk.END, "0")
 dissolve_entry.config(justify="center")
 dissolve_entry.pack()
 
+# Create a style
+style = ttk.Style()
+style.theme_use('clam')
+style.configure("blue.Horizontal.TScale", background='#B0E0E6', troughcolor='#B0E0E6', bordercolor='#B9E6E9')
+
+# Create a StringVar to hold the resample value
+resample_value = tk.StringVar()
+resample_value.set("1.0")
+
+# Add a label and slider for resample
+resample_label = tk.Label(window, textvariable=resample_value, bg='powder blue', font=('TkDefaultFont', 9, 'bold'))
+resample_label.pack(pady=2)
+resample_slider = ttk.Scale(window, from_=0.1, to=10, length=125, style="blue.Horizontal.TScale", command=lambda value: resample_value.set("SIZE " + "{:.1f}".format(float(value)) + "x"))  # Use the ttk.Scale widget1 with the custom style
+resample_slider.set(1)
+resample_slider.pack()
+
+# Create a StringVar to hold the colors value
+colors_value = tk.StringVar()
+colors_value.set("256")
+
+# Add a label and slider for colors
+colors_label = tk.Label(window, textvariable=colors_value, bg='powder blue', font=('TkDefaultFont', 9, 'bold'))
+colors_label.pack(pady=2)
+colors_slider = ttk.Scale(window, from_=256, to=1, length=125, style="blue.Horizontal.TScale", command=lambda value: colors_value.set("{:.0f}".format(float(value)) + " COLORS"))  # Use the ttk.Scale widget with the custom style
+colors_slider.set(256)
+colors_slider.pack()
+
 # Add a frame for the widgets
 widget_frame = tk.Frame(window, bg='powder blue')
 widget_frame.pack(pady=15)
 
 # Add a label for dithering method
-dither_methods = ['DITHER OPTIONS', '      NONE       ', '       8-BIT       ', '     ORDERED     ', '    RASTERIZE    ', 'FLOYDSTEINBERG']
-dither_method_var = tk.StringVar(value=dither_methods[0])
+DITHER_METHODS = ['DITHER OPTIONS',  '         NONE           ', '          8-BIT          ', '     ORDERED     ', '    RASTERIZE    ', 'FLOYDSTEINBERG']
+dither_method_var = tk.StringVar(value=DITHER_METHODS[0])
 dither_method_label = tk.Label(widget_frame, textvariable=dither_method_var, bg='pale turquoise', relief='raised', font=('TkDefaultFont', 9, 'bold'))
 dither_method_label.grid(row=0, column=0, ipadx=15, ipady=5)
 
 # Add a menu for selecting the dithering method
 dither_method_menu = tk.Menu(window, tearoff=0)
-for method in dither_methods:
+for method in DITHER_METHODS:
     dither_method_menu.add_command(label=method, command=lambda m=method: dither_method_var.set(m))
 
 # Bind a click event to the label to show the menu

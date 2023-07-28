@@ -51,12 +51,15 @@ def create_gif_from_images(folder_path, output_folder, output_name, speed=100, d
     
     # Add dissolve effect between each image
     dissolved_images = []
-    for i in range(len(images) - 1):
-        for j in range(dissolve):
-            alpha = j / dissolve
-            blend = Image.blend(images[i], images[i+1], alpha)
-            dissolved_images.append(blend)
-    dissolved_images.append(images[-1])
+    if dissolve == 0:
+        dissolved_images = images.copy()
+    else:
+        for i in range(len(images) - 1):
+            for j in range(dissolve):
+                alpha = j / dissolve
+                blend = Image.blend(images[i], images[i+1], alpha)
+                dissolved_images.append(blend)
+        dissolved_images.append(images[-1])
 
     # Save images as GIF
     if not output_name:
