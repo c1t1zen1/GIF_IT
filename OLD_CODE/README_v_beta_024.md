@@ -2,7 +2,7 @@
 
                             !!! BETA RELEASE - GIF IT !!!
 
-GIF IT - code by C1t1zen with CodeGPT in VSCode on Windows 10 - July 25 2023
+GIF IT - code by C1t1zen with CodeGPT in VSCode on Windows 10 - July 27 2023
 
 THIS IS A BETA RELEASE USE WITH CAUTION ALWAYS MAKE BACKUPS OF YOUR IMAGES FIRST 
 
@@ -17,15 +17,19 @@ Name all image files sequentially i.e. "MyGIF_001.jpg, MyGIF_002.jpg, MyGIF_003.
 Make sure you have the image files with the acceptable extensions (PNG, JPG, or JPEG) in the one folder for the conversion to work correctly. 
 The images should all be the same dimension.
 
-+ Added in Beta v 0.2.3 is Dithering, drag and drop folder to GIF creation and leaving NAME IT blank to use folder name. 
++ Added in Beta v 0.3.8 - Dissolve between frams, resize output and limit total colors.
++ Added in Beta v 0.2.3 - Dithering, drag and drop folder to GIF creation and leaving NAME IT blank to use folder name. 
                                               
 # USE: GIF IT
 
 Click on GIF_IT_v_023.exe and the interface will open:
 1. NAME IT: Create a new name for your GIF. It will automatically add the extension. Leave blank if you want to use the folder name for your GIF.
 2. TIME IT: Choose the length of time for each frame in milliseconds (ms). 1 ms up to 100000 ms acceptable. A value of 1000 ms = 1 second per frame.
-3. DITHER OPTIONS: There are a few diterh options that can be used for style and optimization they are ORDERED, RASTERIZE, FLOYDSTEINBERG, 8-BIT, or NONE. Leaving the setting on DITHER OPTIONS also = NONE.   
-4. Click on the GIF IT button to select the folder containing the number sequenced images you want to convert. A file dialog window will open, allowing you to navigate to the desired folder. Select the folder and click "OK". 
+3. DISSOLVE IT: Choose how many frames you want to fade between each image. Alpha blend dissolve.
+4. SIZE: Scale GIF output down to 0.1 or up to 10 times original size
+5. COLORS: Limit colors from a max of 256 down to 1 color
+6. DITHER OPTIONS: There are a few diterh options that can be used for style and optimization they are ORDERED, RASTERIZE, FLOYDSTEINBERG, 8-BIT, or NONE. Leaving the setting on DITHER OPTIONS also = NONE.   
+7. Click on the GIF IT button to select the folder containing the number sequenced images you want to convert. A file dialog window will open, allowing you to navigate to the desired folder. Select the folder and click "OK". 
 
 OR
 
@@ -46,7 +50,7 @@ Repeat the process as many times as you like by entering a new name, maybe adjus
 THIS IS A BETA RELEASE USE WITH CAUTION ALWAYS MAKE BACKUPS OF YOUR IMAGES FIRST !
 - https://c1t1zen.com/
 
-GIF IT - code by C1t1zen with CodeGPT in VSCode on Windows 10 - Beta V 024 - July 25 2023
+GIF IT - code by C1t1zen with CodeGPT in VSCode on Windows 10 - Beta V 038 - July 27 2023
 
                             !!! BETA RELEASE - GIF IT !!!
 
