@@ -17,7 +17,7 @@ Name all image files sequentially i.e. "MyGIF_001.jpg, MyGIF_002.jpg, MyGIF_003.
 Make sure you have the image files with the acceptable extensions (PNG, JPG, or JPEG) in the one folder for the conversion to work correctly. 
 The images should all be the same dimension.
 
-+ Added in Beta v 0.5.2 - Open it toggle to open after creation, Adjust size and color values by typing it. 
++ Added in Beta v 0.5.2 - Toggle to open after creation, Adjust size and color values by typing it. 
 + Added in Beta v 0.3.8 - Dissolve between frames, resize output and limit total colors.
 + Added in Beta v 0.2.3 - Dithering, drag and drop folder to GIF creation and leaving NAME IT blank to use folder name. 
 + Intial Release v 0.1.3                               
