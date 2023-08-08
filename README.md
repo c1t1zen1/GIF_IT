@@ -2,7 +2,7 @@
 
                             !!! BETA RELEASE - GIF IT !!!
 
-GIF IT - code by C1t1zen with CodeGPT in VSCode on Windows 10 - July 27 2023
+GIF IT - code by C1t1zen with CodeGPT in VSCode on Windows 10 - Beta V 053 - Aug 7 2023
 
 THIS IS A BETA RELEASE USE WITH CAUTION ALWAYS MAKE BACKUPS OF YOUR IMAGES FIRST 
 
@@ -53,7 +53,7 @@ Repeat the process as many times as you like by entering a new name, maybe adjus
 THIS IS A BETA RELEASE USE WITH CAUTION ALWAYS MAKE BACKUPS OF YOUR IMAGES FIRST !
 - https://c1t1zen.com/
 
-GIF IT - code by C1t1zen with CodeGPT & Codeium in VSCode on Windows 10 - Beta V 052 - Aug 2 2023
+GIF IT - code by C1t1zen with CodeGPT & Codeium in VSCode on Windows 10 - Beta V 053 - Aug 7 2023
 
                             !!! BETA RELEASE - GIF IT !!!
 
