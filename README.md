@@ -11,7 +11,7 @@ THIS IS A BETA RELEASE USE WITH CAUTION ALWAYS MAKE BACKUPS OF YOUR IMAGES FIRST
 # ABOUT: GIF IT
 
 GIF IT will allow you to easily create a GIF animation from a folder of JPEG's or PNG files.
-Folder preperations before using GIF IT appplication:
+Folder preperations before using GIF IT application:
 Name all image files sequentially i.e. "MyGIF_001.jpg, MyGIF_002.jpg, MyGIF_003.jpg, ...etc" 
 
 Make sure you have the image files with the acceptable extensions (PNG, JPG, or JPEG) in the one folder for the conversion to work correctly. 
