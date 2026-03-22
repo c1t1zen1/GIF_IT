@@ -1,6 +1,6 @@
 # GIF IT - Create GIF & MP4 animations from a folder of images
 
-**GIF IT v0.6.0 Beta** — Code by C1t1zen with AI assistance
+**GIF IT v0.6.1 Beta** — Code by C1t1zen with AI assistance
 
 > BETA RELEASE — Always make backups of your images first!
 
