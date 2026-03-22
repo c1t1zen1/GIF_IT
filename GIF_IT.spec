@@ -32,12 +32,21 @@ a = Analysis(
         "customtkinter",
         "tkinterdnd2",
         "PIL",
+<<<<<<< HEAD
+=======
+        "imageio",
+        "imageio_ffmpeg",
+>>>>>>> 5604c83d56ab0d53eaf5002c383867275b8176d5
         "numpy",
     ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
+<<<<<<< HEAD
     excludes=["imageio_ffmpeg", "imageio_ffmpeg._utils", "imageio"],
+=======
+    excludes=[],
+>>>>>>> 5604c83d56ab0d53eaf5002c383867275b8176d5
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
