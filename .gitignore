@@ -1,0 +1,20 @@
+# Build artifacts — binaries go in GitHub Releases, not source
+*.exe
+*.ico
+
+# PyInstaller build outputs
+build/
+dist/
+*.spec.build/
+
+# PyInstaller spec output folders (spec FILE is kept, not build output)
+__pycache__/
+*.pyc
+*.pyo
+
+# GIF output test files
+*.gif
+
+# OS files
+.DS_Store
+Thumbs.db
