@@ -1,6 +1,6 @@
 # GIF IT - Create GIF & MP4 animations from a folder of images
 
-**GIF IT v0.6.1 Beta** — Code by C1t1zen with AI assistance
+**GIF IT v0.6.2 Beta** — Code by C1t1zen with AI assistance
 
 > BETA RELEASE — Always make backups of your images first!
 
@@ -10,6 +10,14 @@ GIF IT creates GIF and MP4 animations from a folder of sequentially named images
 Built for making memes and quick animations — designed to be intuitive and fast.
 
 **Supported image formats:** PNG, JPG, JPEG, BMP, WebP
+
+### What's New in v0.6.2
+
+- **Bug Fix**: Fixed color pipeline bug where dithering was overriding color quantization
+- **Bug Fix**: Fixed file overwriting — now auto-increments filename if file exists
+- **Improvement**: Added input validation for speed and dissolve values
+- **Improvement**: Added corrupted image handling — failed files are reported, animation continues
+- **Fix**: Added missing numpy dependency to requirements.txt
 
 ### What's New in v0.6.0
 
@@ -24,6 +32,7 @@ Built for making memes and quick animations — designed to be intuitive and fas
 
 ### Changelog
 
+- v0.6.2 — Bug fixes (color pipeline, file overwriting), input validation, corrupted image handling
 - v0.6.0 — Modern UI, frame preview, MP4 export, tutorial system, cross-platform
 - v0.5.2 — Toggle to open after creation, type size/color values directly
 - v0.3.8 — Dissolve between frames, resize output, limit colors
@@ -34,7 +43,7 @@ Built for making memes and quick animations — designed to be intuitive and fas
 
 ```bash
 pip install -r requirements.txt
-python GIF_IT_v_beta_060.py
+python GIF_IT_v_beta_062.py
 ```
 
 ## Build Standalone Executable
