@@ -864,6 +864,17 @@ class GifItApp(ctk.CTk):
             self._load_folder(path)
         if not self.image_files:
             return
+        # Validate inputs
+        try:
+            gif_speed = int(self.speed_entry.get())
+            if gif_speed <= 0:
+                raise ValueError("Speed must be positive")
+            dissolve = int(self.dissolve_entry.get())
+            if dissolve < 0:
+                raise ValueError("Dissolve must be non-negative")
+        except ValueError as e:
+            self.status_label.configure(text=f"Invalid input: {e}")
+            return
         # If MP4 is selected, ensure ffmpeg is available before starting
         if self.format_var.get() == "MP4" and find_ffmpeg() is None:
             self._prompt_ffmpeg_download()
@@ -938,33 +949,40 @@ class GifItApp(ctk.CTk):
             images: list[Image.Image] = []
 
             # ---- Load & process images ----
+            failed_files = []
             for i, filename in enumerate(self.image_files):
                 img_path = os.path.join(folder, filename)
-                img = Image.open(img_path).convert("RGBA")
+                try:
+                    img = Image.open(img_path).convert("RGBA")
+                except Exception as e:
+                    failed_files.append(f"{filename}: {e}")
+                    continue
 
                 # Resize
                 if resample != 1.0:
                     new_size = (int(img.width * resample), int(img.height * resample))
                     img = img.resize(new_size, Image.LANCZOS)
 
-                # Color quantization
+                # Color quantization + dithering (single step)
                 if num_colors < 256:
-                    img = img.quantize(colors=num_colors).convert("RGBA")
-
-                # Dithering
-                dither_map = {
-                    "NONE": Image.Dither.NONE,
-                    "FLOYDSTEINBERG": Image.Dither.FLOYDSTEINBERG,
-                    "ORDERED": Image.Dither.ORDERED,
-                    "RASTERIZE": Image.Dither.RASTERIZE,
-                }
-                pil_dither = dither_map.get(dither_method, Image.Dither.NONE)
-                img_dithered = img.convert("P", dither=pil_dither).convert("RGBA")
-                images.append(img_dithered)
+                    dither_map = {
+                        "NONE": Image.Dither.NONE,
+                        "FLOYDSTEINBERG": Image.Dither.FLOYDSTEINBERG,
+                        "ORDERED": Image.Dither.ORDERED,
+                        "RASTERIZE": Image.Dither.RASTERIZE,
+                    }
+                    pil_dither = dither_map.get(dither_method, Image.Dither.NONE)
+                    img = img.convert("P", colors=num_colors, dither=pil_dither).convert("RGBA")
+                images.append(img)
 
                 # Progress
                 pct = (i + 1) / total
                 self.after(0, self._update_progress, pct)
+
+            if failed_files:
+                self.after(0, self._creation_error, f"Failed to load {len(failed_files)} file(s):\n" + "\n".join(failed_files[:3]) + ("..." if len(failed_files) > 3 else ""))
+            if not images:
+                return
 
             # ---- Dissolve ----
             if dissolve > 0:
@@ -991,9 +1009,12 @@ class GifItApp(ctk.CTk):
         """Save images as GIF or MP4."""
         if fmt == "GIF":
             path = os.path.join(output_folder, output_name + ".gif")
-            # Check overwrite
-            if os.path.exists(path):
-                pass  # TODO: could prompt, but keeping simple for now
+            # Auto-increment filename if file exists
+            base = path
+            counter = 1
+            while os.path.exists(path):
+                path = f"{base}.{counter}"
+                counter += 1
             frames = [img.convert("RGBA") for img in images]
             frames[0].save(
                 path, save_all=True, append_images=frames[1:],
@@ -1005,6 +1026,12 @@ class GifItApp(ctk.CTk):
             codec = "libx265"
             ext = ".mp4"
             path = os.path.join(output_folder, output_name + ext)
+            # Auto-increment filename if file exists
+            base = path
+            counter = 1
+            while os.path.exists(path):
+                path = f"{base}.{counter}"
+                counter += 1
             ffmpeg_exe = find_ffmpeg()
             if ffmpeg_exe is None:
                 raise RuntimeError(
